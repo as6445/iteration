@@ -252,3 +252,24 @@ vec_urls = str_c(url_base, 1:5)
 
 ```
 
+```{r}
+output = vector("list", 5)
+
+for (i in 1:5) {
+  output[[i]] = read_page_reviews(vec_urls[[i]])
+}
+
+dynamite_reviews = bind_rows(output)
+
+dynamite_reviews = map_df(vec_urls, read_page_reviews)
+```
+
+```{r}
+dynamite_reviews = 
+  tibble(
+    page = 1:5,
+    urls = str_c(url_base, page)) %>% 
+  mutate(reviews = map(urls, read_page_reviews)) %>% 
+  unnest()
+```
+
